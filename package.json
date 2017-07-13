@@ -1,7 +1,7 @@
 {
   "name": "reactjs",
   "version": "1.0.0",
-  "description": "React local Setup",
+  "description": "React local Setup With Spring Boot",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,11 +9,12 @@
     "build": "webpack",
     "start": "webpack-dev-server"
   },
-  "author": "Habibun Noby",
-  "license": "ISC",
+  "author": "Insonix",
+  "license": "INC",
   "dependencies": {
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "jquery":"^3.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.22.1",
