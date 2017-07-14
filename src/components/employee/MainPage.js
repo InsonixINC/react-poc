@@ -3,23 +3,54 @@
  */
 import $ from 'jquery';
 import React from 'react';
+import DocumentTitle from 'react-document-title';
+import axios from 'axios';
+import {AddEmp} from './AddEmp';
+import {Router} from 'react-router';
+
+const editBtnLeftMargin={
+    margin: '0px 0px 0px 11px'
+}
+
+const  addBtnTopMargin={
+    margin: '102px 0px 0px 0px'
+}
+
+const apiBaseUrl = "http://localhost:8081/employee";
 
 class Employee extends React.Component{
 
     constructor(){
         super();
         this.state={
-            display :true
+            display :true,
+            id:'',
+            firstname:'',
+            lastname:'',
+            designation:'',
+            salary:''
         }
         this.handleDelete = this.handleDelete.bind(this);
+        this.editEmployee = this.editEmployee.bind(this);
+    }
 
+    editEmployee(){
+        var self = this;
+        var editUrl = apiBaseUrl+'/edit/'+this.props.empl.id;
+        axios.get(editUrl).then(function (response) {
+            console.log(response.data.id);
+            alert(response.data.id);
+        }).catch(function (error) {
+                console.log(error);
+        });
     }
 
     handleDelete() {
         var self = this;
         console.log("Deleting ")
+        var deleteUrl = apiBaseUrl+'/delete/'+this.props.empl.id;
         $.ajax({
-            url: 'http://localhost:8081/employee/delete/'+this.props.empl.id,
+            url: deleteUrl,
             type: 'DELETE',
             success: function(result) {
                 console.log("Deleted "+result);
@@ -31,17 +62,21 @@ class Employee extends React.Component{
     }
 
     render() {
-        if (this.state.display==false) return null;
+        if (this.state.display==false) {
+            return null;
+        }
         else
         return (
             <tr>
-                <td>{this.props.empl.id}</td>
                 <td>{this.props.empl.firstname}</td>
                 <td>{this.props.empl.lastname}</td>
                 <td>{this.props.empl.designation}</td>
                 <td>{this.props.empl.salary}</td>
                 <td>
                     <button className="btn btn-success" onClick={this.handleDelete.bind(this)}>Delete</button>
+                   {/* <span style={editBtnLeftMargin}>
+                        <button className="btn btn-success" onClick={this.editEmployee.bind(this)}>Edit</button>
+                    </span>*/}
                 </td>
             </tr>
         );
@@ -61,12 +96,11 @@ class EmployeeTable extends  React.Component{
             <table className="table table-striped">
                 <thead>
                 <tr>
-                    <th>Id</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Designation</th>
                     <th>Salary</th>
-                    <th>Delete</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>{rows}</tbody>
@@ -92,7 +126,7 @@ export class MainPage extends React.Component{
         console.log("Loading data from server")
         var self = this;
         $.ajax({
-            url: "http://localhost:8081/employee/list",
+            url: apiBaseUrl+"/list",
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
             method: "GET",
@@ -117,12 +151,16 @@ export class MainPage extends React.Component{
 
     render() {
         return (
+        <div style={addBtnTopMargin}>
+            <AddEmp/>
             <div className='container'>
                 <EmployeeTable employeeList={this.state.employees} />
             </div>
+        </div>
         );
     }
 }
+
 
 
 
